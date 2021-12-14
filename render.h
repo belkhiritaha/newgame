@@ -20,7 +20,7 @@
 
 
 int BouclePrincipale();
-void afficher(SDL_Renderer * renderer, int map[][MAP_SIZE_X], SDL_Rect rect, SDL_Texture *block_texture);
+void afficher(SDL_Renderer * renderer, int map[][MAP_SIZE_X], SDL_Rect rect, SDL_Texture *block_texture, SDL_Texture *sprite_texture);
 void create_Win();
 void end_sdl(char ok, char const * msg);
 

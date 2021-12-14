@@ -11,9 +11,13 @@ void initMap(int map[][MAP_SIZE_X]){
     for (i=MAP_SIZE_Y/2; i < MAP_SIZE_Y; ++i){
         for (j= 0; j < MAP_SIZE_X; ++j){
             map[i][j] = 1;
+        }
+    }
+    //map[0][3] = 1;
+    for (i=0; i < MAP_SIZE_Y; ++i){
+        for (j= 0; j < MAP_SIZE_X; ++j){
             printf("%d ", map[i][j]);
         }
         printf("\n");
     }
-    map[0][0] = 1;
 }

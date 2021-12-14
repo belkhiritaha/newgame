@@ -1,7 +1,7 @@
 #include "gameplay.h"
 
 void initPlayer(Player_t * pJoueur){
-    pJoueur->x = 5;
+    pJoueur->x = 0;
     pJoueur->y = 5;
     pJoueur->isGrounded = 0;
     pJoueur->h = 2;
