@@ -33,9 +33,10 @@ void afficher(SDL_Renderer * renderer, int map[][MAP_SIZE_X], SDL_Rect rect,SDL_
 
     block_texture = SDL_CreateTextureFromSurface(renderer, blocks[0]);
 //////////////// affichage map 
-    rect.x = 0;
-    rect.y = 0;
-    rect.w = TailleEcranLong/NB_BLOCKS_X;
+    rect.x =  0;
+    rect.y =  (int)(TailleEcranHaut/NB_BLOCKS_Y + (Joueur.y - (int)Joueur.y - 0.5)*TailleEcranHaut/(NB_BLOCKS_Y));
+    //rect.w = TailleEcranLong/NB_BLOCKS_X;
+    rect.w = (TailleEcranLong/NB_BLOCKS_X)*(Joueur.x - (int)Joueur.x);
     rect.h = TailleEcranHaut/NB_BLOCKS_Y;
     int offset_i;
     int offset_j;
@@ -44,20 +45,22 @@ void afficher(SDL_Renderer * renderer, int map[][MAP_SIZE_X], SDL_Rect rect,SDL_
             {     
                 offset_i = i + (int)Joueur.x;
                 offset_j = j + (int)Joueur.y;
-                rect.x = i * rect.w;
-                rect.y = j * rect.h;
+                rect.y = rect.y + rect.h;
                 if (offset_i >= 0 && offset_i < MAP_SIZE_X && offset_j >= 0 && offset_j < MAP_SIZE_Y){
                     if(map[offset_j][offset_i] == 1){
                         SDL_RenderCopy(renderer, block_texture, NULL, &rect);
+                        rect.w = TailleEcranLong/NB_BLOCKS_X;
                     }   
                 }
             }
+            rect.x += rect.w;
+            rect.y = (int)(TailleEcranHaut/NB_BLOCKS_Y + (Joueur.y - (int)Joueur.y - 0.5)*TailleEcranHaut/(NB_BLOCKS_Y));
     }
 //////////////// affichage joueur
+    rect.w = (TailleEcranLong/NB_BLOCKS_X) * Joueur.w;
+    rect.h =(TailleEcranHaut/NB_BLOCKS_Y) * Joueur.h;
     rect.x = TailleEcranLong/2 - rect.w;
     rect.y = TailleEcranHaut/2 - rect.h - Joueur.y;
-    rect.w *= Joueur.w;
-    rect.h *= Joueur.h;
     sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[0]);
     SDL_RenderCopy(renderer, sprite_texture, NULL, &rect);
     SDL_RenderPresent(renderer);

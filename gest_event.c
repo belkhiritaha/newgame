@@ -13,7 +13,7 @@ void * gestInput(SDL_Renderer * renderer){
                     switch (event.key.keysym.sym)
                     {
                     case SDLK_z:
-                        Joueur.y -=1;
+                        Joueur.y -=0.1;
                         printf("player x = %f  y = %f",Joueur.x ,Joueur.y);
                         printf("move up\n");
                         continue;
@@ -61,6 +61,7 @@ void * gestInput(SDL_Renderer * renderer){
                     break;
                 }
             }
+    gestPhysique();
     SDL_Delay(1);
     return NULL;
 }
