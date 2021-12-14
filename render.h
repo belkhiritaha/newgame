@@ -14,14 +14,13 @@
 #include "map.h"
 #include "main.h"
 #include "gest_event.h"
-#include "map.h"
 
 #define WINDOW_H 800
 #define WINDOW_W 1000
 
 
 int BouclePrincipale();
-void afficher(SDL_Renderer * renderer, int map[][MAP_SIZE_Y], SDL_Rect rect, SDL_Texture *block_texture);
+void afficher(SDL_Renderer * renderer, int map[][MAP_SIZE_X], SDL_Rect rect, SDL_Texture *block_texture);
 void create_Win();
 void end_sdl(char ok, char const * msg);
 

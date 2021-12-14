@@ -4,6 +4,7 @@
         "map.h": "c",
         "time.h": "c",
         "sdl.h": "c",
-        "string_view": "c"
+        "string_view": "c",
+        "entity.h": "c"
     }
 }

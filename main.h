@@ -4,6 +4,8 @@
 
 #include "render.h"
 #include "map.h"
+#include "entity.h"
+#include "gameplay.h"
 
 extern int EtapeActuelleDuJeu;
 extern int running;

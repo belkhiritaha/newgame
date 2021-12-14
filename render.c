@@ -18,6 +18,7 @@ char score_str[20];
 SDL_Rect Message_rect;
 
 SDL_Surface *blocks[7];
+SDL_Surface *character_sprite[10];
 
 
 void SDL_ExitWithError(const char *message){
@@ -27,25 +28,42 @@ void SDL_ExitWithError(const char *message){
 }
 
 
-void afficher(SDL_Renderer * renderer, int map[][MAP_SIZE_Y], SDL_Rect rect,SDL_Texture  *block_texture){
+void afficher(SDL_Renderer * renderer, int map[][MAP_SIZE_X], SDL_Rect rect,SDL_Texture  *block_texture){
+
+//////////////// affichage map 
     rect.x = 0;
     rect.y = 0;
     rect.w = TailleEcranLong/NB_BLOCKS_X;
     rect.h = TailleEcranHaut/NB_BLOCKS_Y;
-
-    for(int j = 0; j< NB_BLOCKS_Y; j++){
-            for (int i = 0; i < NB_BLOCKS_X; i++)
+    int offset_i;
+    int offset_j;
+    for(int i = 0; i< NB_BLOCKS_Y; i++){
+            for (int j = 0; j < NB_BLOCKS_X; j++)
             {
-                rect.x = i * rect.w;
-                rect.y = j * rect.h;
-                if(map[i][j] == 1){
-                    block_texture = SDL_CreateTextureFromSurface(renderer, blocks[0]);
-                    SDL_RenderCopy(renderer, block_texture, NULL, &rect);
-                    SDL_DestroyTexture(block_texture);
+                offset_i = i + Joueur.x;
+                offset_j = j + Joueur.y;
+                if (offset_i >= 0 && offset_i < MAP_SIZE_Y && offset_j >= 0 && offset_j< MAP_SIZE_X){
+                    //printf("%d %d\n", j,i);
+                    
+                    if(map[offset_i][offset_j] == 1){
+                        block_texture = SDL_CreateTextureFromSurface(renderer, blocks[0]);
+                        SDL_RenderCopy(renderer, block_texture, NULL, &rect);
+                        SDL_DestroyTexture(block_texture);    
+                    }
                 }
-            }    
+                rect.y = rect.y + rect.h;
+            }
+            rect.x = rect.x + rect.w;    
         }
+//////////////// affichage joueur
+    rect.x = TailleEcranLong/2 - rect.w;
+    rect.y = TailleEcranHaut/2 - rect.h;
+    rect.w *= Joueur.w;
+    rect.h *= Joueur.h;
+    block_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[0]);
+    SDL_RenderCopy(renderer, block_texture, NULL, &rect);
     SDL_RenderPresent(renderer);
+
 }
 
 void end_sdl(char ok, char const * msg) {
@@ -141,6 +159,7 @@ int BouclePrincipale()
     create_Win();
         
     blocks[0] = IMG_Load("Res/green.png");
+    character_sprite[0] = IMG_Load("Res/blue.png");
     SDL_Texture *block_texture = NULL;
 
     score_rect.x = 0;
@@ -169,6 +188,8 @@ int BouclePrincipale()
                 break;
             case 1:
                 afficher(renderer, map, rect, block_texture);
+                SDL_Delay(10);
+                SDL_RenderClear(renderer);
                 break;
                 //case 420:WinOrange();break;
                 //case 421:WinVert();break;

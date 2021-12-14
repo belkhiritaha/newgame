@@ -14,18 +14,26 @@ void * gestInput(SDL_Renderer * renderer){
                     switch (event.key.keysym.sym)
                     {
                     case SDLK_z:
+                        Joueur.y -=1;
+                        printf("player y = %f", Joueur.y);
                         printf("move up\n");
                         continue;
                     
                     case SDLK_q:
+                        Joueur.x -= 1;
+                        printf("player x = %f", Joueur.x);
                         printf("move left\n");
                         continue;
                     
                     case SDLK_d:
+                        printf("player x = %f", Joueur.x);
+                        Joueur.x +=1;
                         printf("move right\n");
                         continue;
 
                     case SDLK_s:
+                        Joueur.y +=1;
+                        printf("player y = %f", Joueur.y);
                         printf("move down\n");
                         continue;
 
