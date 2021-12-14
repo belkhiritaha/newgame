@@ -2,7 +2,6 @@
 
 void * gestInput(SDL_Renderer * renderer){
     SDL_Event event;
-    SDL_Rect rect;
     while (SDL_PollEvent(&event)){
             switch(event.type)
             {

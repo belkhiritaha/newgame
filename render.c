@@ -42,16 +42,19 @@ void afficher(SDL_Renderer * renderer, int map[][MAP_SIZE_X], SDL_Rect rect,SDL_
     for(int i = 0; i< NB_BLOCKS_Y; i++){
             for (int j = 0; j < NB_BLOCKS_X; j++)
             {     
-                    rect.x = i * rect.w;
-                    rect.y = j * rect.h;
-                    if(map[j][i] == 1){
-                        printf("case (%d, %d) map == %d \n", j, i, map[i][j]);
+                offset_i = i + (int)Joueur.x;
+                offset_j = j + (int)Joueur.y;
+                rect.x = i * rect.w;
+                rect.y = j * rect.h;
+                if (offset_i >= 0 && offset_i < MAP_SIZE_X && offset_j >= 0 && offset_j < MAP_SIZE_Y){
+                    if(map[offset_j][offset_i] == 1){
                         SDL_RenderCopy(renderer, block_texture, NULL, &rect);
                     }   
-            } 
+                }
+            }
     }
 //////////////// affichage joueur
-    rect.x = TailleEcranLong/2 - rect.w + Joueur.x;
+    rect.x = TailleEcranLong/2 - rect.w;
     rect.y = TailleEcranHaut/2 - rect.h - Joueur.y;
     rect.w *= Joueur.w;
     rect.h *= Joueur.h;
@@ -155,7 +158,7 @@ int BouclePrincipale()
     create_Win();
         
     blocks[0] = IMG_Load("Res/green.png");
-    character_sprite[0] = IMG_Load("Res/blue.png");
+    character_sprite[0] = IMG_Load("Res/character.png");
     SDL_Texture *block_texture = NULL;
     SDL_Texture *sprite_texture = NULL;
 
