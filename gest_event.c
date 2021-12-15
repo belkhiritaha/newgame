@@ -19,19 +19,19 @@ void * gestInput(SDL_Renderer * renderer){
                         continue;
                     
                     case SDLK_q:
-                        Joueur.x -= 1;
+                        Joueur.x -= 0.1;
                         printf("player x = %f  y = %f",Joueur.x ,Joueur.y);
                         printf("move left\n");
                         continue;
                     
                     case SDLK_d:
                         printf("player x = %f  y = %f",Joueur.x ,Joueur.y);
-                        Joueur.x +=1;
+                        Joueur.x +=0.1;
                         printf("move right\n");
                         continue;
 
                     case SDLK_s:
-                        Joueur.y +=1;
+                        Joueur.y +=0.1;
                         printf("player x = %f  y = %f",Joueur.x ,Joueur.y);
                         printf("move down\n");
                         continue;

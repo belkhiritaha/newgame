@@ -33,28 +33,31 @@ void afficher(SDL_Renderer * renderer, int map[][MAP_SIZE_X], SDL_Rect rect,SDL_
 
     block_texture = SDL_CreateTextureFromSurface(renderer, blocks[0]);
 //////////////// affichage map 
-    rect.x =  0;
-    rect.y =  (int)(TailleEcranHaut/NB_BLOCKS_Y + (Joueur.y - (int)Joueur.y - 0.5)*TailleEcranHaut/(NB_BLOCKS_Y));
     //rect.w = TailleEcranLong/NB_BLOCKS_X;
-    rect.w = (TailleEcranLong/NB_BLOCKS_X)*(Joueur.x - (int)Joueur.x);
-    rect.h = TailleEcranHaut/NB_BLOCKS_Y;
+    float side_padding = (Joueur.x - (int)Joueur.x);
+    float top_padding = -(Joueur.y - -(int)Joueur.y) + 1;
+    printf("%f ", side_padding);
+    rect.w = (TailleEcranLong/NB_BLOCKS_X);
+    rect.h = (TailleEcranHaut/NB_BLOCKS_Y);
+    rect.x =  -side_padding * rect.w;
+    rect.y =  -top_padding * rect.h;
     int offset_i;
     int offset_j;
-    for(int i = 0; i< NB_BLOCKS_Y; i++){
-            for (int j = 0; j < NB_BLOCKS_X; j++)
+    for(int i = 0; i< NB_BLOCKS_Y + 1; i++){
+            for (int j = 0; j < NB_BLOCKS_X + 1; j++)
             {     
                 offset_i = i + (int)Joueur.x;
                 offset_j = j + (int)Joueur.y;
                 rect.y = rect.y + rect.h;
+                rect.h = TailleEcranHaut/NB_BLOCKS_Y;
                 if (offset_i >= 0 && offset_i < MAP_SIZE_X && offset_j >= 0 && offset_j < MAP_SIZE_Y){
                     if(map[offset_j][offset_i] == 1){
                         SDL_RenderCopy(renderer, block_texture, NULL, &rect);
-                        rect.w = TailleEcranLong/NB_BLOCKS_X;
                     }   
                 }
             }
             rect.x += rect.w;
-            rect.y = (int)(TailleEcranHaut/NB_BLOCKS_Y + (Joueur.y - (int)Joueur.y - 0.5)*TailleEcranHaut/(NB_BLOCKS_Y));
+            rect.y =  -top_padding * rect.h;
     }
 //////////////// affichage joueur
     rect.w = (TailleEcranLong/NB_BLOCKS_X) * Joueur.w;
