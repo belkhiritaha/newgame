@@ -1,5 +1,13 @@
 #include "gest_event.h"
 
+int Keys[NB_KEYS];
+
+void initKeys(int Keys[NB_KEYS]){
+    for (int i = 0; i < 4; i++){
+        Keys[i] = 0;
+    }
+}
+
 void * gestInput(SDL_Renderer * renderer){
     SDL_Event event;
     while (SDL_PollEvent(&event)){
@@ -13,33 +21,50 @@ void * gestInput(SDL_Renderer * renderer){
                     switch (event.key.keysym.sym)
                     {
                     case SDLK_z:
-                        Joueur.y -=0.1;
-                        printf("player x = %f  y = %f",Joueur.x ,Joueur.y);
-                        printf("move up\n");
+                        Keys[0] = 1;
                         continue;
                     
                     case SDLK_q:
-                        Joueur.x -= 0.1;
-                        printf("player x = %f  y = %f",Joueur.x ,Joueur.y);
-                        printf("move left\n");
+                        Keys[3] = 1;
+                        Joueur.direction = 0;
                         continue;
                     
                     case SDLK_d:
-                        printf("player x = %f  y = %f",Joueur.x ,Joueur.y);
-                        Joueur.x +=0.1;
-                        printf("move right\n");
+                        Keys[1] = 1;
+                        Joueur.direction = 1;
                         continue;
 
                     case SDLK_s:
-                        Joueur.y +=0.1;
-                        printf("player x = %f  y = %f",Joueur.x ,Joueur.y);
-                        printf("move down\n");
+                        Keys[2] = 1;
                         continue;
 
                     case SDLK_x:
                         EtapeActuelleDuJeu = 0;
                         running = 0;
                         break;
+                    
+                    default:
+                        continue;
+                    }
+                
+                case SDL_KEYUP:
+                    switch (event.key.keysym.sym)
+                    {
+                    case SDLK_z:
+                        Keys[0] = 0;
+                        continue;
+                    
+                    case SDLK_q:
+                        Keys[3] = 0;
+                        continue;
+                    
+                    case SDLK_d:
+                        Keys[1] = 0;
+                        continue;
+
+                    case SDLK_s:
+                        Keys[2] = 0;
+                        continue;
                     
                     default:
                         continue;

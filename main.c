@@ -22,6 +22,7 @@ int main()
   running = 1;
   initMap(map);
   initPlayer(&Joueur);
+  initKeys(Keys);
 
   srand(time(NULL));
 
