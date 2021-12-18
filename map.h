@@ -5,11 +5,14 @@
 #define NB_BLOCKS_Y 10
 
 #define MAP_SIZE_X 100
-#define MAP_SIZE_Y 10
+#define MAP_SIZE_Y 20
 
-int map[MAP_SIZE_Y][MAP_SIZE_X];
+#include "main.h"
 
-void initMap(int tab[][MAP_SIZE_X]);
+extern int map[MAP_SIZE_Y][MAP_SIZE_X];
+
+void initMap();
+void printMap();
 
 
 

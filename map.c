@@ -1,6 +1,9 @@
 #include "map.h"
 #include <stdio.h>
-void initMap(int map[][MAP_SIZE_X]){
+
+int map[MAP_SIZE_Y][MAP_SIZE_X];
+
+void initMap(){
     int i;
     int j;
     for (i=0; i<MAP_SIZE_Y; ++i){
@@ -12,5 +15,32 @@ void initMap(int map[][MAP_SIZE_X]){
         for (j= 0; j < MAP_SIZE_X; ++j){
             map[i][j] = 1;
         }
+    }
+    map[0][99] = 1;
+    map[1][99] = 1;
+    map[2][99] = 1;
+    map[3][99] = 1;
+    map[4][99] = 1;
+    map[5][99] = 1;
+    map[6][99] = 1;
+    map[7][99] = 1;
+}
+
+void printMap(){
+    int i;
+    int j;
+    int case_x = (int)Joueur.x;
+    int case_y = (int)Joueur.y;
+    printf("%d %d\n", case_x, case_y);
+    for (i=0; i<MAP_SIZE_Y; ++i){
+        for (j=0; j<MAP_SIZE_X; ++j){
+            if ( i == case_y && j == case_x){
+                printf("2");
+            }
+            else{
+                printf("%d", map[i][j]);
+            }
+        }
+        printf("\n");
     }
 }

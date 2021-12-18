@@ -5,6 +5,7 @@
         "time.h": "c",
         "sdl.h": "c",
         "string_view": "c",
-        "entity.h": "c"
+        "entity.h": "c",
+        "gameplay.h": "c"
     }
 }

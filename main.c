@@ -20,7 +20,8 @@ int main()
 
   EtapeActuelleDuJeu = 1;
   running = 1;
-  initMap(map);
+  initMap();
+  printMap();
   initPlayer(&Joueur);
   initKeys(Keys);
 

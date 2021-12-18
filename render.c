@@ -39,14 +39,15 @@ void DrawPlayer(SDL_Renderer* renderer ,SDL_Rect rect , SDL_Texture* sprite_text
         sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[tick % 2]);
     }
     else {
-        //tick += (int)(Joueur.xSpeed * 1/MAX_RUN_SPEED);
+        //tick += (int)(Joueur.xSpeed * 1/(MAX_RUN_SPEED*10));
+
         sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[2 + tick % 4]);
     }
     SDL_RenderCopyEx(renderer, sprite_texture, NULL, &rect, 0, NULL, SDL_FLIP_HORIZONTAL*(1-Joueur.direction));
 }
 
 
-void afficher(SDL_Renderer * renderer, int map[][MAP_SIZE_X], SDL_Rect rect,SDL_Texture  *block_texture, SDL_Texture *sprite_texture, SDL_Texture *bg_texture){
+void afficher(SDL_Renderer * renderer, SDL_Rect rect,SDL_Texture  *block_texture, SDL_Texture *sprite_texture, SDL_Texture *bg_texture){
     bg_texture = SDL_CreateTextureFromSurface(renderer, background);
     block_texture = SDL_CreateTextureFromSurface(renderer, blocks[0]);
 //////////////// affichage background
@@ -57,28 +58,34 @@ void afficher(SDL_Renderer * renderer, int map[][MAP_SIZE_X], SDL_Rect rect,SDL_
     SDL_RenderCopy(renderer, bg_texture, NULL, &rect);
 //////////////// affichage map 
     float side_padding = (Joueur.x - (int)Joueur.x);
-    float top_padding = (Joueur.y - -(int)Joueur.y);
+    float top_padding = (Joueur.y  -(int)Joueur.y);
     rect.w = (TailleEcranLong/NB_BLOCKS_X);
     rect.h = (TailleEcranHaut/NB_BLOCKS_Y);
     rect.x =  -side_padding * rect.w;
-    rect.y =  top_padding * rect.h;
-    int offset_i;
-    int offset_j;
-    for(int i = 0; i< NB_BLOCKS_Y + 10; i++){
-            for (int j = 0; j < NB_BLOCKS_X + 10; j++)
-            {     
-                offset_i = i + (int)Joueur.x;
-                offset_j = j + (int)Joueur.y;
-                rect.y = rect.y + rect.h;
-                rect.h = TailleEcranHaut/NB_BLOCKS_Y;
-                if (offset_i >= 0 && offset_i < MAP_SIZE_X && offset_j >= 0 && offset_j < MAP_SIZE_Y){
-                    if(map[offset_j][offset_i] == 1){
+    rect.y = 0;//top_padding * rect.h;
+    int offset_y;
+    int offset_x;
+    for(int y = 0; y<NB_BLOCKS_Y + 4; y++){
+            for (int x = 0; x < NB_BLOCKS_X +5; x++)
+            {
+                offset_x = x + Joueur.x - 5;
+                offset_y = y + Joueur.y - 4;
+                //printf("offset_x = %d, offset_y = %d\n", offset_x, offset_y);
+                //printf("%d %d\n", rect.x, rect.y);
+                
+                if (offset_y >= 0 && offset_y < MAP_SIZE_Y && offset_x >= 0 && offset_x < MAP_SIZE_X){
+                    if(map[offset_y][offset_x] == 1){
                         SDL_RenderCopy(renderer, block_texture, NULL, &rect);
-                    }   
+                    }
+                    else{
+                        SDL_RenderCopy(renderer, bg_texture, NULL, &rect);
+                    }
                 }
+                rect.x = rect.x + rect.w;
             }
-            rect.x += rect.w;
-            rect.y =  top_padding * rect.h;
+        rect.x = -side_padding * rect.w;
+        rect.y = rect.y + rect.h;
+        //rect.y = 0;// top_padding * rect.h;
     }
 //////////////// affichage joueur
     DrawPlayer(renderer, rect, sprite_texture);
@@ -218,7 +225,7 @@ int BouclePrincipale()
                // DrawMenu();
                 break;
             case 1:
-                afficher(renderer, map, rect, block_texture, sprite_texture, bg_texure);
+                afficher(renderer, rect, block_texture, sprite_texture, bg_texure);
                 SDL_Delay(10);
                 SDL_RenderClear(renderer);
                 break;
