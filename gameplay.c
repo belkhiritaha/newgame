@@ -1,8 +1,8 @@
 #include "gameplay.h"
 
 void initPlayer(Player_t * pJoueur){
-    pJoueur->x = 90;
-    pJoueur->y = 8;
+    pJoueur->x = 87;
+    pJoueur->y = 7;
     pJoueur->isGrounded = 0;
     pJoueur->h = 2;
     pJoueur->w = 1;
@@ -10,47 +10,79 @@ void initPlayer(Player_t * pJoueur){
     pJoueur->ySpeed = 0;
 }
 
-int checkCollision(){
+int checkCollisionY(){
     float case_x = floorf(Joueur.x + Joueur.w - 1);
     float case_y = floorf(Joueur.y + Joueur.h);
-    printf("positions : %f %f\n",Joueur.x, Joueur.y);
-    printf("cases : %f %f %d\n", case_x, case_y, map[(int)case_y][(int)case_x]);
+    //printf("positions : %f %f\n",Joueur.x, Joueur.y);
+    //printf("cases : %f %f %d\n", case_x, case_y, map[(int)case_y][(int)case_x]);
     //if (case_y >= 0 && case_y < NB_BLOCKS_Y && case_x >= 0 && case_x < NB_BLOCKS_X){
         if (map[(int)case_y][(int)case_x]){
-            printf("collide\n");
+            //printf("collide\n");
+            Joueur.ySpeed = 0;
             Joueur.isGrounded = 1;
             return 1;
+        }
+        else {
+            Joueur.isGrounded = 0;
         }
     //}
     return 0;
 }
 
+int checkCollisionX(float xSpeed){
+    float case_right = ceilf(Joueur.x + Joueur.w - 1);
+    float case_left = floorf(Joueur.x);
+    float case_bot = floorf(Joueur.y + Joueur.h - 1);
+    float case_top = case_bot - 1;
+    //printf("left = %f , pos = %f , right = %f, bot= %f\n", case_left, Joueur.x, case_right, case_bot);
+    //printf("DESTINATION: %f\n", Joueur.x + xSpeed);
+    if (map[(int)case_bot][(int)case_right] || map[(int)case_top][(int)case_right]){
+        Joueur.xSpeed = 0;
+        return 2;
+    }
+    if (map[(int)case_bot][(int)case_left] || map[(int)case_top][(int)case_left]){
+        Joueur.xSpeed = 0;
+        return 1;
+    }
+    return 0;
+}
+
 int playerMoveX(){
     //printf("pos : %f %f\n", Joueur.x, Joueur.y);
-    if (Joueur.x + Joueur.w/2 >= MAP_SIZE_X || Joueur.x - Joueur.w/2 < 0){
-        Joueur.xSpeed = 0;
-        printf("bonk\n");
-        //return 0;
-    }
-    else {
-        (Joueur.xSpeed > 0) ? (Joueur.xSpeed -= GROUND_FRICTION * Joueur.xSpeed + GROUND_MVT/1.32) : (Joueur.xSpeed += GROUND_FRICTION * Joueur.xSpeed+ GROUND_MVT/1.32);
+    switch (checkCollisionX(Joueur.xSpeed))
+    {
+        case 0: //no sides collided
+            if (fabs(Joueur.xSpeed) < MAX_RUN_SPEED){
+                Joueur.xSpeed += GROUND_MVT * (Keys[1] - Keys[3]);
+            }
+            (Joueur.xSpeed > 0) ? (Joueur.xSpeed -= GROUND_FRICTION * Joueur.xSpeed + GROUND_MVT/1.32) : (Joueur.xSpeed += GROUND_FRICTION * Joueur.xSpeed+ GROUND_MVT/1.32);
 
-        Joueur.x += Joueur.xSpeed;
+            Joueur.x += Joueur.xSpeed;
+            break;
+        
+        case 2: //right side collided
+            Joueur.xSpeed -= GROUND_MVT * Keys[3];
+            Joueur.x += Joueur.xSpeed;
+            break;
+
+        case 1: //left side collided
+            Joueur.xSpeed += GROUND_MVT * Keys[1];
+            Joueur.x += Joueur.xSpeed;
+            break;
+
+        default:
+            break;
     }
-    if (fabs(Joueur.xSpeed) < MAX_RUN_SPEED){
-        Joueur.xSpeed += GROUND_MVT * (Keys[1] - Keys[3]);
-    }
+
     return 1;
 }
 
 int playerMoveY(){
-    if (checkCollision()){
-        Joueur.ySpeed = -JUMP_SPEED * Keys[0];
-    }
-    if (fabs(Joueur.ySpeed) < MAX_Y_SPEED){
+    //printf("ySpeed = %f\n", Joueur.ySpeed);
+    if (checkCollisionY()){
         Joueur.ySpeed += JUMP_SPEED * (Keys[2] - Keys[0]);
     }
-    else {
+    else{
         Joueur.ySpeed += GRAVITY;
     }
     Joueur.y += Joueur.ySpeed;

@@ -58,17 +58,17 @@ void afficher(SDL_Renderer * renderer, SDL_Rect rect,SDL_Texture  *block_texture
     SDL_RenderCopy(renderer, bg_texture, NULL, &rect);
 //////////////// affichage map 
     float side_padding = (Joueur.x - (int)Joueur.x);
-    float top_padding = (Joueur.y  -(int)Joueur.y);
+    float top_padding = 1 - (Joueur.y  -(int)Joueur.y);
     rect.w = (TailleEcranLong/NB_BLOCKS_X);
     rect.h = (TailleEcranHaut/NB_BLOCKS_Y);
     rect.x =  -side_padding * rect.w;
-    rect.y = 0;//top_padding * rect.h;
+    rect.y = (top_padding- 1) * rect.h;
     int offset_y;
     int offset_x;
     for(int y = 0; y<NB_BLOCKS_Y + 4; y++){
             for (int x = 0; x < NB_BLOCKS_X +5; x++)
             {
-                offset_x = x + Joueur.x - 5;
+                offset_x = x + Joueur.x - 4;
                 offset_y = y + Joueur.y - 4;
                 //printf("offset_x = %d, offset_y = %d\n", offset_x, offset_y);
                 //printf("%d %d\n", rect.x, rect.y);
@@ -76,9 +76,6 @@ void afficher(SDL_Renderer * renderer, SDL_Rect rect,SDL_Texture  *block_texture
                 if (offset_y >= 0 && offset_y < MAP_SIZE_Y && offset_x >= 0 && offset_x < MAP_SIZE_X){
                     if(map[offset_y][offset_x] == 1){
                         SDL_RenderCopy(renderer, block_texture, NULL, &rect);
-                    }
-                    else{
-                        SDL_RenderCopy(renderer, bg_texture, NULL, &rect);
                     }
                 }
                 rect.x = rect.x + rect.w;
