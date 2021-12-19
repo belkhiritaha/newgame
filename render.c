@@ -30,20 +30,33 @@ void SDL_ExitWithError(const char *message){
 }
 
 void DrawPlayer(SDL_Renderer* renderer ,SDL_Rect rect , SDL_Texture* sprite_texture){
+    int tick = SDL_GetTicks()/1000;
+    SDL_Rect spriterect;
+    spriterect.h = 60;
+    spriterect.w = 35;
+    spriterect.x = 80 + (200 * tick%4);
+    spriterect.y = 72;
+
     rect.w = (TailleEcranLong/NB_BLOCKS_X) * Joueur.w;
     rect.h =(TailleEcranHaut/NB_BLOCKS_Y) * Joueur.h;
-    rect.x = TailleEcranLong/2 - rect.w;
+    rect.x = TailleEcranLong/2 - rect.w + 0.5;
     rect.y = TailleEcranHaut/2 - (TailleEcranHaut/NB_BLOCKS_Y);
-    int tick = SDL_GetTicks()/1000;
     if (Joueur.xSpeed == 0){
-        sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[tick % 2]);
+        spriterect.h = 60;
+        spriterect.w = 35;
+        spriterect.x = 80 + (200 * tick%4);
+        spriterect.y = 72;
+        sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[0]);
     }
     else {
         //tick += (int)(Joueur.xSpeed * 1/(MAX_RUN_SPEED*10));
-
-        sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[2 + tick % 4]);
+        spriterect.h = 60;
+        spriterect.w = 50;
+        spriterect.x = 70 + (200 * tick%8);
+        spriterect.y = 72;
+        sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[1]);
     }
-    SDL_RenderCopyEx(renderer, sprite_texture, NULL, &rect, 0, NULL, SDL_FLIP_HORIZONTAL*(1-Joueur.direction));
+    SDL_RenderCopyEx(renderer, sprite_texture, &spriterect, &rect, 0, NULL, SDL_FLIP_HORIZONTAL*(1-Joueur.direction));
 }
 
 
@@ -51,9 +64,9 @@ void afficher(SDL_Renderer * renderer, SDL_Rect rect,SDL_Texture  *block_texture
     bg_texture = SDL_CreateTextureFromSurface(renderer, background);
     block_texture = SDL_CreateTextureFromSurface(renderer, blocks[0]);
 //////////////// affichage background
-    rect.h = TailleEcranHaut;
-    rect.w = TailleEcranLong;
-    rect.x = 0;
+    rect.h = TailleEcranHaut * 2;
+    rect.w = TailleEcranLong * 2;
+    rect.x = (Joueur.x - (int)Joueur.x);
     rect.y = 0;
     SDL_RenderCopy(renderer, bg_texture, NULL, &rect);
 //////////////// affichage map 
@@ -186,13 +199,13 @@ int BouclePrincipale()
     create_Win();
         
     blocks[0] = IMG_Load("Res/green.png");
-    character_sprite[0] = IMG_Load("Res/player_base0.png");
-    character_sprite[1] = IMG_Load("Res/player_base1.png");
+    character_sprite[0] = IMG_Load("Res/Sprites/Idle.png");
+    character_sprite[1] = IMG_Load("Res/Sprites/Run.png");
     character_sprite[2] = IMG_Load("Res/player_walk0.png");
     character_sprite[3] = IMG_Load("Res/player_walk1.png");
     character_sprite[4] = IMG_Load("Res/player_walk2.png");
     character_sprite[5] = IMG_Load("Res/player_walk3.png");
-    background = IMG_Load("Res/705837.png");
+    background = IMG_Load("Res/4393129.jpg");
     SDL_Texture *bg_texure = NULL;
     SDL_Texture *block_texture = NULL;
     SDL_Texture *sprite_texture = NULL;
