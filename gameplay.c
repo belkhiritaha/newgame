@@ -40,12 +40,12 @@ int checkCollisionX(float xSpeed){
     int case_below = floorf(Joueur.y + Joueur.xHitbox + 2/16.0 - 1) + 1 +1;
     printf("left = %d , pos = %f, %f , right = %d, bot= %d top= %d\n", case_left, Joueur.x,Joueur.y, case_right, case_bot, case_top);
     //printf("DESTINATION: %f\n", Joueur.x + xSpeed);
-    if (map[case_bot][case_right] || map[case_top][case_right] || ( Joueur.y - (int)Joueur.y > 0.2 && map[case_below][case_right])){
-        Joueur.xSpeed = -0.001;
+    if (map[case_bot][case_right] || map[case_top][case_right] || ( !Joueur.isGrounded && Joueur.y - (int)Joueur.y > 0.2 && map[case_below][case_right])){
+        Joueur.xSpeed = 0;
         return 2;
     }
-    if (map[case_bot][case_left] || map[case_top][case_left] || ( Joueur.y - (int)Joueur.y > 0.2 && map[case_below][case_left])){
-        Joueur.xSpeed = 0.001;
+    if (map[case_bot][case_left] || map[case_top][case_left] || (!Joueur.isGrounded && Joueur.y - (int)Joueur.y > 0.2 && map[case_below][case_left])){
+        Joueur.xSpeed = 0;
         return 1;
     }
     return 0;
