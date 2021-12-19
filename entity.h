@@ -19,6 +19,7 @@ typedef struct Player{
 
     int direction;
     int isGrounded;
+    int isFalling;
 }Player_t;
 
 extern Player_t Joueur;

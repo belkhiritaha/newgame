@@ -32,23 +32,20 @@ int checkCollisionY(){
 }
 
 int checkCollisionX(float xSpeed){
-    int yMinTile = floorf(Joueur.y + Joueur.yHitbox -2/16.0)+1;
-    int yMaxTile = floorf(Joueur.y + 2*Joueur.yHitbox+2/16.0);
-    int xNewTile;
 
-    float case_right = ceilf(Joueur.x);
-    float case_left = floorf(Joueur.x + 2/16.0);
-    float case_bot = floorf(Joueur.y + Joueur.xHitbox - 1) + 1;
-    float case_top = case_bot - 1;
-    printf("left = %f , pos = %f, %f , right = %f, bot= %f\n", case_left, Joueur.x,Joueur.y, case_right, case_bot);
-    printf("DESTINATION: %f\n", Joueur.x + xSpeed);
-    if (map[(int)case_bot][(int)case_right] || map[(int)case_top][(int)case_right]){
-        Joueur.xSpeed = 0;
+    int case_right = ceilf(Joueur.x);
+    int case_left = floorf(Joueur.x + 2/16.0);
+    int case_bot = floorf(Joueur.y + Joueur.xHitbox - 1) + 1;
+    int case_top = case_bot - 1;
+    int case_below = floorf(Joueur.y + Joueur.xHitbox + 2/16.0 - 1) + 1 +1;
+    printf("left = %d , pos = %f, %f , right = %d, bot= %d top= %d\n", case_left, Joueur.x,Joueur.y, case_right, case_bot, case_top);
+    //printf("DESTINATION: %f\n", Joueur.x + xSpeed);
+    if (map[case_bot][case_right] || map[case_top][case_right] || ( Joueur.y - (int)Joueur.y > 0.2 && map[case_below][case_right])){
+        Joueur.xSpeed = -0.001;
         return 2;
     }
-    if (map[(int)case_bot][(int)case_left] || map[(int)case_top][(int)case_left]){
-        Joueur.xSpeed = 0;
-        printf("left");
+    if (map[case_bot][case_left] || map[case_top][case_left] || ( Joueur.y - (int)Joueur.y > 0.2 && map[case_below][case_left])){
+        Joueur.xSpeed = 0.001;
         return 1;
     }
     return 0;
@@ -62,7 +59,7 @@ int playerMoveX(){
             if (fabs(Joueur.xSpeed) < MAX_RUN_SPEED){
                 Joueur.xSpeed += GROUND_MVT * (Keys[1] - Keys[3]);
             }
-            (Joueur.xSpeed > 0) ? (Joueur.xSpeed -= GROUND_FRICTION * Joueur.xSpeed + GROUND_MVT/1.32) : (Joueur.xSpeed += GROUND_FRICTION * Joueur.xSpeed+ GROUND_MVT/1.32);
+            (Joueur.xSpeed > 0) ? (Joueur.xSpeed -= GROUND_MVT/1.32) : (Joueur.xSpeed += GROUND_MVT/1.32);
 
             Joueur.x += Joueur.xSpeed;
             break;
