@@ -37,6 +37,10 @@ void initMap(){
     map[8][90] = 1;
 
     map[9][85] = 1;
+    map[8][84] = 1;
+    map[7][83] = 1;
+    map[8][82] = 1;
+    map[9][81] = 1;
 }
 
 void printMap(){
