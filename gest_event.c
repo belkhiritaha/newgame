@@ -1,6 +1,7 @@
 #include "gest_event.h"
 
 int Keys[NB_KEYS];
+int JoueurAttack = 0;
 
 void initKeys(int Keys[NB_KEYS]){
     for (int i = 0; i < 4; i++){
@@ -14,7 +15,11 @@ void * gestInput(SDL_Renderer * renderer){
             switch(event.type)
             {
                 case SDL_MOUSEBUTTONDOWN:
-                    printf("Click\n");
+                    JoueurAttack = 1;
+                    break;
+
+                case SDL_MOUSEBUTTONUP:
+                    JoueurAttack = 0;
                     break;
 
                 case SDL_KEYDOWN:

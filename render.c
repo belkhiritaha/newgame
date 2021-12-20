@@ -18,6 +18,7 @@ SDL_Surface *jump_surface;
 SDL_Surface *background;
 SDL_Surface *blocks[7];
 SDL_Surface *character_sprite[10];
+SDL_Surface *character_sprite_attack[4];
 SDL_Texture * sprite_texture;
 
 
@@ -38,21 +39,70 @@ void DrawPlayer(SDL_Renderer* renderer ,SDL_Rect rect , SDL_Texture* sprite_text
     rect.h =(TailleEcranHaut/NB_BLOCKS_Y) * Joueur.h;
     rect.x = TailleEcranLong/2 - rect.w;
     rect.y = TailleEcranHaut/2 - (TailleEcranHaut/NB_BLOCKS_Y);
-    if (Joueur.xSpeed == 0){
-        sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[0]);
-    }
-    else {
-        //tick += (int)(Joueur.xSpeed * 1/(MAX_RUN_SPEED*10));
+    if (Joueur.isGrounded){
+        if (fabs(Joueur.xSpeed) < 0.003){
+            sprt_rect.h = 56;
+            sprt_rect.w = 35;
+            sprt_rect.x = 35 * (tick % 4);
+            sprt_rect.y = 0;
+            sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[0]);
+        }
+        else {
+            //tick += (int)(Joueur.xSpeed * 1/(MAX_RUN_SPEED*10));
+            sprt_rect.h = 50;
+            sprt_rect.w = 45;
+            sprt_rect.x = 45 * (tick % 8);
+            sprt_rect.y = 0;
 
-        sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[0]);
+            sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[1]);
+        }
+    }
+    else{
+        if (Joueur.ySpeed > 0){
+            sprt_rect.h = 55;
+            sprt_rect.w = 37;
+            sprt_rect.x = 37 * (tick % 2);
+            sprt_rect.y = 0;
+
+            sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[3]);
+        }
+        else {
+            sprt_rect.h = 56;
+            sprt_rect.w = 36;
+            sprt_rect.x = 36 * (tick % 2);
+            sprt_rect.y = 0;
+
+            sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[2]);        
+        }
     }
 
     if (DrawJumpEffect){
+        rect.y += 30;
         SDL_Texture* jump_texture;
         jump_texture = SDL_CreateTextureFromSurface(renderer, jump_surface);
         SDL_RenderCopy(renderer, jump_texture, NULL, &rect);
+        SDL_DestroyTexture(jump_texture);
+        rect.y -= 30;
     }
-    SDL_RenderCopyEx(renderer, sprite_texture, &sprt_rect, &rect, 0, NULL, SDL_FLIP_HORIZONTAL*(1-Joueur.direction));
+
+    if (JoueurAttack){
+        if (tick % 4 == 2){
+            rect.x+= 50 * (Joueur.direction - 1);
+            rect.h *=2;
+            rect.w *=2;
+            rect.y-=160;
+        }
+        else {
+            rect.w *=1.5;
+        }
+        sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite_attack[tick % 4]);
+        SDL_RenderCopyEx(renderer, sprite_texture, NULL, &rect, 0, NULL, SDL_FLIP_HORIZONTAL*(1-Joueur.direction));
+    }
+    else {
+        SDL_RenderCopyEx(renderer, sprite_texture, &sprt_rect, &rect, 0, NULL, SDL_FLIP_HORIZONTAL*(1-Joueur.direction));
+    }
+    SDL_DestroyTexture(sprite_texture);
+
 }
 
 
@@ -201,13 +251,18 @@ int BouclePrincipale()
         
     blocks[0] = IMG_Load("Res/block.png");
     jump_surface = IMG_Load("Res/jump_effect.png");
-    character_sprite[0] = IMG_Load("Res/run_spirtesheet.png");
-    character_sprite[1] = IMG_Load("Res/player_base1.png");
-    character_sprite[2] = IMG_Load("Res/player_walk0.png");
-    character_sprite[3] = IMG_Load("Res/player_walk1.png");
+    character_sprite[0] = IMG_Load("Res/idle_spritesheet.png");
+    character_sprite[1] = IMG_Load("Res/run_spirtesheet.png");
+    character_sprite[2] = IMG_Load("Res/jump_spritesheet.png");
+    character_sprite[3] = IMG_Load("Res/fall_spritesheet.png");
     character_sprite[4] = IMG_Load("Res/player_walk2.png");
     character_sprite[5] = IMG_Load("Res/player_walk3.png");
     background = IMG_Load("Res/Cartoon_Forest_BG_03.png");
+
+    character_sprite_attack[0] = IMG_Load("Res/attack0.png");
+    character_sprite_attack[1] = IMG_Load("Res/attack1.png");
+    character_sprite_attack[2] = IMG_Load("Res/attack2.png");
+    character_sprite_attack[3] = IMG_Load("Res/attack3.png");
     SDL_Texture *bg_texure = NULL;
     SDL_Texture *block_texture = NULL;
     SDL_Texture *sprite_texture = NULL;

@@ -41,7 +41,7 @@ int checkCollisionX(float xSpeed){
     int case_bot = floorf(Joueur.y + Joueur.xHitbox - 1) + 1;
     int case_top = case_bot - 1;
     int case_below = floorf(Joueur.y + Joueur.xHitbox + 2/16.0 - 1) + 1 +1;
-    printf("left = %d , pos = %f, %f , right = %d, bot= %d top= %d\n", case_left, Joueur.x,Joueur.y, case_right, case_bot, case_top);
+    //printf("left = %d , pos = %f, %f , right = %d, bot= %d top= %d\n", case_left, Joueur.x,Joueur.y, case_right, case_bot, case_top);
     //printf("DESTINATION: %f\n", Joueur.x + xSpeed);
     if (map[case_bot][case_right] || map[case_top][case_right]){
         if ( !Joueur.isGrounded && Joueur.y - (int)Joueur.y > 0.2 && map[case_below][case_right]){
@@ -65,6 +65,7 @@ int checkCollisionX(float xSpeed){
 
 int playerMoveX(){
     //printf("pos : %f %f\n", Joueur.x, Joueur.y);
+    printf("xSpeed = %f, ySpeed = %f\n", Joueur.xSpeed, Joueur.ySpeed);
     switch (checkCollisionX(Joueur.xSpeed))
     {
         case 0: //no sides collided
