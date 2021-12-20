@@ -11,12 +11,10 @@ SDL_Renderer * renderer = NULL;
 
 SDL_Color White = {255, 255, 255};
 
-SDL_Rect score_rect;
-
-char score_str[20];
-
 SDL_Rect Message_rect;
 
+
+SDL_Surface *jump_surface;
 SDL_Surface *background;
 SDL_Surface *blocks[7];
 SDL_Surface *character_sprite[10];
@@ -48,6 +46,12 @@ void DrawPlayer(SDL_Renderer* renderer ,SDL_Rect rect , SDL_Texture* sprite_text
 
         sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[0]);
     }
+
+    if (DrawJumpEffect){
+        SDL_Texture* jump_texture;
+        jump_texture = SDL_CreateTextureFromSurface(renderer, jump_surface);
+        SDL_RenderCopy(renderer, jump_texture, NULL, &rect);
+    }
     SDL_RenderCopyEx(renderer, sprite_texture, &sprt_rect, &rect, 0, NULL, SDL_FLIP_HORIZONTAL*(1-Joueur.direction));
 }
 
@@ -56,11 +60,16 @@ void afficher(SDL_Renderer * renderer, SDL_Rect rect,SDL_Texture  *block_texture
     bg_texture = SDL_CreateTextureFromSurface(renderer, background);
     block_texture = SDL_CreateTextureFromSurface(renderer, blocks[0]);
 //////////////// affichage background
+    SDL_Rect parallax;
+    parallax.h = 1080;
+    parallax.w = 910;
+    parallax.x = 10 * Joueur.x;
+    parallax.y = 0;
     rect.h = TailleEcranHaut;
     rect.w = TailleEcranLong;
     rect.x = 0;
     rect.y = 0;
-    SDL_RenderCopy(renderer, bg_texture, NULL, &rect);
+    SDL_RenderCopy(renderer, bg_texture, &parallax, &rect);
 //////////////// affichage map 
     float side_padding = (Joueur.x - (int)Joueur.x);
     float top_padding = 1 - (Joueur.y  -(int)Joueur.y);
@@ -190,7 +199,8 @@ int BouclePrincipale()
 {
     create_Win();
         
-    blocks[0] = IMG_Load("Res/green.png");
+    blocks[0] = IMG_Load("Res/block.png");
+    jump_surface = IMG_Load("Res/jump_effect.png");
     character_sprite[0] = IMG_Load("Res/run_spirtesheet.png");
     character_sprite[1] = IMG_Load("Res/player_base1.png");
     character_sprite[2] = IMG_Load("Res/player_walk0.png");
@@ -201,9 +211,6 @@ int BouclePrincipale()
     SDL_Texture *bg_texure = NULL;
     SDL_Texture *block_texture = NULL;
     SDL_Texture *sprite_texture = NULL;
-
-    score_rect.x = 0;
-    score_rect.y = 0;
 
     Message_rect.x = 0; 
     Message_rect.y = 0; 

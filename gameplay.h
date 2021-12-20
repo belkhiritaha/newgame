@@ -11,6 +11,8 @@
 #define GROUND_MVT 0.00006
 #define GRAVITY 0.000008
 
+extern int DrawJumpEffect;
+
 void initPlayer(Player_t * pJoueur);
 void gestPhysique();
 
