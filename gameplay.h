@@ -5,7 +5,7 @@
 #include "entity.h"
 #include "gest_event.h"
 #include <math.h>
-#define MAX_RUN_SPEED 0.005
+#define MAX_RUN_SPEED 0.007
 #define MAX_Y_SPEED 0.001
 #define JUMP_SPEED 0.005
 #define GROUND_MVT 0.00006

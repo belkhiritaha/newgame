@@ -16,6 +16,7 @@ void * gestInput(SDL_Renderer * renderer);
 void initKeys(int Keys[NB_KEYS]);
 extern int Keys[NB_KEYS];
 extern int JoueurAttack;
+extern int JoueurAttackTMP;
 
 
 #endif /* GEST_HEADER_ */

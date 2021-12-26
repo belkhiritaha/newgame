@@ -48,7 +48,7 @@ void DrawPlayer(SDL_Renderer* renderer ,SDL_Rect rect , SDL_Texture* sprite_text
             sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite[0]);
         }
         else {
-            //tick += (int)(Joueur.xSpeed * 1/(MAX_RUN_SPEED*10));
+            //tick += (int)((MAX_RUN_SPEED) / Joueur.xSpeed);
             sprt_rect.h = 50;
             sprt_rect.w = 45;
             sprt_rect.x = 45 * (tick % 8);

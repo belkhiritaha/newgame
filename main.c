@@ -23,6 +23,7 @@ int main()
   initMap();
   //printMap();
   initPlayer(&Joueur);
+  initPlayer(&Ennemy);
   initKeys(Keys);
 
   srand(time(NULL));

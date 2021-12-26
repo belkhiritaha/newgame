@@ -23,5 +23,6 @@ typedef struct Player{
 }Player_t;
 
 extern Player_t Joueur;
+extern Player_t Ennemy;
 
 #endif /* ENTITY_HEADER_ */

@@ -64,8 +64,8 @@ int checkCollisionX(float xSpeed){
 }
 
 int playerMoveX(){
-    //printf("pos : %f %f\n", Joueur.x, Joueur.y);
-    printf("xSpeed = %f, ySpeed = %f\n", Joueur.xSpeed, Joueur.ySpeed);
+    printf("pos : %f %f\n", Joueur.x, Joueur.y);
+    //printf("xSpeed = %f, ySpeed = %f\n", Joueur.xSpeed, Joueur.ySpeed);
     switch (checkCollisionX(Joueur.xSpeed))
     {
         case 0: //no sides collided
