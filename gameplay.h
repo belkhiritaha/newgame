@@ -12,6 +12,7 @@
 #define GRAVITY 0.000008
 
 extern int DrawJumpEffect;
+extern int AttackNum;
 
 void initPlayer(Player_t * pJoueur);
 void gestPhysique();

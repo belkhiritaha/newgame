@@ -37,14 +37,14 @@ void DrawEnnemies(SDL_Renderer* renderer, SDL_Texture* ennemy_texture, float pos
     rect.x = TailleEcranLong/2 - rect.w + (Ennemy.x - posX) * 100;
     rect.y = TailleEcranHaut/2 - (TailleEcranHaut/NB_BLOCKS_Y) + (Ennemy.y - posY) * 80;
     SDL_Rect sprt_rect;
-    printf("%f %f \n", Ennemy.x, posX);
+    //printf("%f %f \n", Ennemy.x, posX);
     if (Ennemy.x + Ennemy.w > posX - 5 && Ennemy.x - Ennemy.w < posX + 5  && Ennemy.y > posY - 5 && Ennemy.y < posY + 5){
             sprt_rect.h = 53;
             sprt_rect.w = 45;
             sprt_rect.x = 45 * (tick % 8);
             sprt_rect.y = 0;
             sprite_texture = SDL_CreateTextureFromSurface(renderer, king_sprite);
-            SDL_RenderCopyEx(renderer, sprite_texture, &sprt_rect, &rect, 0, NULL, SDL_FLIP_HORIZONTAL);
+            SDL_RenderCopyEx(renderer, sprite_texture, &sprt_rect, &rect, 0, NULL, SDL_FLIP_HORIZONTAL *(1 - Joueur.direction));
             SDL_DestroyTexture(sprite_texture);
     }
 }
@@ -108,7 +108,7 @@ void DrawPlayer(SDL_Renderer* renderer ,SDL_Rect rect , SDL_Texture* sprite_text
     }
 
     if (JoueurAttack){
-        if (tick % 4 == 2){
+        if (AttackNum == 2){
             rect.x+= 50 * (Joueur.direction - 1);
             rect.h *=2;
             rect.w *=2;
@@ -117,7 +117,7 @@ void DrawPlayer(SDL_Renderer* renderer ,SDL_Rect rect , SDL_Texture* sprite_text
         else {
             rect.w *=1.5;
         }
-        sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite_attack[tick % 4]);
+        sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite_attack[AttackNum]);
         SDL_RenderCopyEx(renderer, sprite_texture, NULL, &rect, 0, NULL, SDL_FLIP_HORIZONTAL*(1-Joueur.direction));
     }
     else {
