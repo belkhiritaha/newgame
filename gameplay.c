@@ -2,6 +2,7 @@
 
 int DrawJumpEffect = 0;
 int AttackNum = 0;
+int EnnemyAttack = 0;
 
 void initPlayer(Player_t * pJoueur){
     pJoueur->x = 87;
@@ -105,20 +106,23 @@ int PlayerMoveX(Player_t * pEntity){
 int EntityMoveX(Player_t *pEntity){
     int MoveLeft = 0;
     int MoveRight = 0;
-    
-    if (fabs(pEntity->x - Joueur.x) > 1.5){
-        if (pEntity->x - Joueur.x < 0){
-            MoveRight = 1;
-            MoveLeft = 0;
+    if (fabs(pEntity->x - Joueur.x) < 3){
+        if (fabs(pEntity->x - Joueur.x) > 1.5){
+            if (pEntity->x - Joueur.x < 0){
+                MoveRight = 1;
+                MoveLeft = 0;
+            }
+            else {
+                MoveLeft = 1;
+                MoveRight = 0;
+            }
+            EnnemyAttack = 0;
         }
         else {
-            MoveLeft = 1;
+            EnnemyAttack = 1;
             MoveRight = 0;
+            MoveLeft = 0;
         }
-    }
-    else {
-        MoveRight = 0;
-        MoveLeft = 0;
     }
 
     switch (checkCollisionX(pEntity))
@@ -178,7 +182,16 @@ int PlayerMoveY(Player_t * pEntity){
     return 1;
 }
 
+void checkAttack(){
+    if (AttackNum == 3){
+        if (fabs(Ennemy.x - Joueur.x) < 1){
+            Ennemy.y = 5;
+        }
+    }
+}
+
 void gestPhysique(){
+    checkAttack();
     incAttack(&JoueurAttack, &AttackNum);
     PlayerMoveX(&Joueur);
     EntityMoveX(&Ennemy);

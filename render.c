@@ -38,7 +38,7 @@ void DrawEnnemies(SDL_Renderer* renderer, SDL_Texture* ennemy_texture, float pos
     rect.y = TailleEcranHaut/2 - (TailleEcranHaut/NB_BLOCKS_Y) + (Ennemy.y - posY) * 80;
     SDL_Rect sprt_rect;
     //printf("%f %f \n", Ennemy.x, posX);
-    if (Ennemy.x + Ennemy.w > posX - 5 && Ennemy.x - Ennemy.w < posX + 5  && Ennemy.y > posY - 5 && Ennemy.y < posY + 5){
+    if (Ennemy.x + Ennemy.w > posX - 5 && Ennemy.x - Ennemy.w < posX + 5  && Ennemy.y + Ennemy.h > posY - 5 && Ennemy.y - Ennemy.h < posY + 5){
             sprt_rect.h = 53;
             sprt_rect.w = 45;
             sprt_rect.x = 45 * (tick % 8);
