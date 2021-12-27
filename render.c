@@ -18,6 +18,7 @@ SDL_Surface *jump_surface;
 SDL_Surface *background;
 SDL_Surface *blocks[7];
 SDL_Surface *character_sprite[10];
+SDL_Surface *king_sprite;
 SDL_Surface *character_sprite_attack[4];
 SDL_Texture * sprite_texture;
 
@@ -28,7 +29,28 @@ void SDL_ExitWithError(const char *message){
     exit(EXIT_FAILURE);
 }
 
+void DrawEnnemies(SDL_Renderer* renderer, SDL_Texture* ennemy_texture, float posX, float posY){
+    int tick = SDL_GetTicks()/500;
+    SDL_Rect rect;
+    rect.w = (TailleEcranLong/NB_BLOCKS_X) * Joueur.w;
+    rect.h =(TailleEcranHaut/NB_BLOCKS_Y) * Joueur.h;
+    rect.x = TailleEcranLong/2 - rect.w + (Ennemy.x - posX) * 100;
+    rect.y = TailleEcranHaut/2 - (TailleEcranHaut/NB_BLOCKS_Y) + (Ennemy.y - posY) * 80;
+    SDL_Rect sprt_rect;
+    printf("%f %f \n", Ennemy.x, posX);
+    if (Ennemy.x + Ennemy.w > posX - 5 && Ennemy.x - Ennemy.w < posX + 5  && Ennemy.y > posY - 5 && Ennemy.y < posY + 5){
+            sprt_rect.h = 53;
+            sprt_rect.w = 45;
+            sprt_rect.x = 45 * (tick % 8);
+            sprt_rect.y = 0;
+            sprite_texture = SDL_CreateTextureFromSurface(renderer, king_sprite);
+            SDL_RenderCopyEx(renderer, sprite_texture, &sprt_rect, &rect, 0, NULL, SDL_FLIP_HORIZONTAL);
+            SDL_DestroyTexture(sprite_texture);
+    }
+}
+
 void DrawPlayer(SDL_Renderer* renderer ,SDL_Rect rect , SDL_Texture* sprite_texture){
+    DrawEnnemies(renderer, sprite_texture, Joueur.x, Joueur.y);
     int tick = SDL_GetTicks()/500;
     SDL_Rect sprt_rect;
     sprt_rect.h = 50;
@@ -257,6 +279,8 @@ int BouclePrincipale()
     character_sprite[3] = IMG_Load("Res/fall_spritesheet.png");
     character_sprite[4] = IMG_Load("Res/player_walk2.png");
     character_sprite[5] = IMG_Load("Res/player_walk3.png");
+
+    king_sprite = IMG_Load("Res/king_run_spritesheet.png");
     background = IMG_Load("Res/Cartoon_Forest_BG_03.png");
 
     character_sprite_attack[0] = IMG_Load("Res/attack0.png");
