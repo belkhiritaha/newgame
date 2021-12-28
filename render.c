@@ -18,7 +18,7 @@ SDL_Surface *jump_surface;
 SDL_Surface *background;
 SDL_Surface *blocks[7];
 SDL_Surface *character_sprite[10];
-SDL_Surface *king_sprite;
+SDL_Surface *king_sprite[10];
 SDL_Surface *character_sprite_attack[4];
 SDL_Texture * sprite_texture;
 
@@ -39,13 +39,41 @@ void DrawEnnemies(SDL_Renderer* renderer, SDL_Texture* ennemy_texture, float pos
     SDL_Rect sprt_rect;
     //printf("%f %f \n", Ennemy->x, posX);
     if (Ennemy->x + Ennemy->w > posX - 5 && Ennemy->x - Ennemy->w < posX + 5  && Ennemy->y + Ennemy->h > posY - 5 && Ennemy->y - Ennemy->h < posY + 5){
-            sprt_rect.h = 53;
-            sprt_rect.w = 45;
-            sprt_rect.x = 45 * (tick % 8);
-            sprt_rect.y = 0;
-            sprite_texture = SDL_CreateTextureFromSurface(renderer, king_sprite);
-            SDL_RenderCopyEx(renderer, sprite_texture, &sprt_rect, &rect, 0, NULL, SDL_FLIP_HORIZONTAL *(1 - Joueur.direction));
-            SDL_DestroyTexture(sprite_texture);
+        if (Ennemy->isGrounded){
+            if (fabs(Ennemy->xSpeed) < 0.003){
+                sprt_rect.h = 54;
+                sprt_rect.w = 31;
+                sprt_rect.x = 31 * (tick % 8);
+                sprt_rect.y = 0;
+                sprite_texture = SDL_CreateTextureFromSurface(renderer, king_sprite[0]);
+            }
+            else {
+                sprt_rect.h = 53;
+                sprt_rect.w = 45;
+                sprt_rect.x = 45 * (tick % 8);
+                sprt_rect.y = 0;
+                sprite_texture = SDL_CreateTextureFromSurface(renderer, king_sprite[1]);
+            }
+        }
+        else {
+            if (Ennemy->ySpeed > 0){
+                sprt_rect.h = 52;
+                sprt_rect.w = 44;
+                sprt_rect.x = 44 * (tick % 2);
+                sprt_rect.y = 0;
+                sprite_texture = SDL_CreateTextureFromSurface(renderer, king_sprite[3]);
+            }
+            else {
+                sprt_rect.h = 54;
+                sprt_rect.w = 41;
+                sprt_rect.x = 41 * (tick % 2);
+                sprt_rect.y = 0;
+                sprite_texture = SDL_CreateTextureFromSurface(renderer, king_sprite[2]);
+            }
+            
+        }
+        SDL_RenderCopyEx(renderer, sprite_texture, &sprt_rect, &rect, 0, NULL, SDL_FLIP_HORIZONTAL *(1 - Joueur.direction));
+        SDL_DestroyTexture(sprite_texture);
     }
 }
 
@@ -110,7 +138,7 @@ void DrawPlayer(SDL_Renderer* renderer ,SDL_Rect rect , SDL_Texture* sprite_text
         rect.y -= 30;
     }
 
-    if (JoueurAttack){
+    if (Joueur.isAttacking){
         if (AttackNum == 2){
             rect.x+= 50 * (Joueur.direction - 1);
             rect.h *=2;
@@ -283,7 +311,10 @@ int BouclePrincipale()
     character_sprite[4] = IMG_Load("Res/player_walk2.png");
     character_sprite[5] = IMG_Load("Res/player_walk3.png");
 
-    king_sprite = IMG_Load("Res/king_run_spritesheet.png");
+    king_sprite[0] = IMG_Load("Res/king_idle_spritesheet.png");
+    king_sprite[1] = IMG_Load("Res/king_run_spritesheet.png");
+    king_sprite[2] = IMG_Load("Res/king_jump_spritesheet.png");
+    king_sprite[3] = IMG_Load("Res/king_fall_spritesheet.png");
     background = IMG_Load("Res/Cartoon_Forest_BG_03.png");
 
     character_sprite_attack[0] = IMG_Load("Res/attack0.png");

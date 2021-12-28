@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define NB_ENNEMY 20
+#define NB_ENNEMY 10
 
 typedef struct Player{
     float x;
@@ -25,6 +25,7 @@ typedef struct Player{
     int direction;
     int isGrounded;
     int isFalling;
+    int isAttacking;
 }Player_t;
 
 #include "gameplay.h"

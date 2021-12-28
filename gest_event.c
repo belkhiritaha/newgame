@@ -1,7 +1,6 @@
 #include "gest_event.h"
 
 int Keys[NB_KEYS];
-int JoueurAttack = 0;
 
 void initKeys(int Keys[NB_KEYS]){
     for (int i = 0; i < 4; i++){
@@ -15,12 +14,12 @@ void * gestInput(SDL_Renderer * renderer){
             switch(event.type)
             {
                 case SDL_MOUSEBUTTONDOWN:
-                    JoueurAttack = 1;
+                    Joueur.isAttacking = 1;
                     AttackNum = 0;
                     break;
 
                 case SDL_MOUSEBUTTONUP:
-                    JoueurAttack = 0;
+                    Joueur.isAttacking = 0;
                     AttackNum = 0;
                     break;
 

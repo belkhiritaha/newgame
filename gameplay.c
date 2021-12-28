@@ -2,7 +2,6 @@
 
 int DrawJumpEffect = 0;
 int AttackNum = 0;
-int EnnemyAttack = 0;
 int tick = 420;
 
 void initPlayer(Player_t * pJoueur, float x, float y){
@@ -18,7 +17,7 @@ void initPlayer(Player_t * pJoueur, float x, float y){
 }
 
 void incAttack(int * pJoueurAttack, int * pAttackNum, int * tick){
-    printf("%d %d %d\n", *pJoueurAttack, *pAttackNum, *tick);
+    //printf("%d %d %d\n", *pJoueurAttack, *pAttackNum, *tick);
     if (*pJoueurAttack == 0){
         *pAttackNum = 0;
         *tick = 420;
@@ -113,7 +112,7 @@ int EntityMoveX(Player_t *pEntity){
     int MoveLeft = 0;
     int MoveRight = 0;
     if (fabs(pEntity->x - Joueur.x) < 4.5){
-        if (fabs(pEntity->x - Joueur.x) > 1.5){
+        if (fabs(pEntity->x - Joueur.x) > 1 + 2 * (rand()%10)/10){
             if (pEntity->x - Joueur.x < 0){
                 MoveRight = 1;
                 MoveLeft = 0;
@@ -122,10 +121,10 @@ int EntityMoveX(Player_t *pEntity){
                 MoveLeft = 1;
                 MoveRight = 0;
             }
-            EnnemyAttack = 0;
+            pEntity->isAttacking = 0;
         }
         else {
-            EnnemyAttack = 1;
+            pEntity->isAttacking = 1;
             MoveRight = 0;
             MoveLeft = 0;
         }
@@ -134,7 +133,7 @@ int EntityMoveX(Player_t *pEntity){
     switch (checkCollisionX(pEntity))
     {
         case 0: //no sides collided
-            if (fabs(pEntity->xSpeed) < MAX_RUN_SPEED){
+            if (fabs(pEntity->xSpeed) < ENNEMY_MAX_RUN_SPEED){
                 pEntity->xSpeed += ENNEMY_GROUND_MVT * (MoveRight - MoveLeft);
             }
             (pEntity->xSpeed > 0) ? (pEntity->xSpeed -= ENNEMY_GROUND_MVT/1.32) : (pEntity->xSpeed += ENNEMY_GROUND_MVT/1.32);
@@ -190,14 +189,14 @@ int PlayerMoveY(Player_t * pEntity){
 
 void checkAttack(Player_t * pEnnemy){
     if (AttackNum == 2){
-        if (fabs(pEnnemy->x - Joueur.x) < 1 && fabs(pEnnemy->y - Joueur.y) < 3){
+        if (fabs(pEnnemy->x - Joueur.x) < 1 && fabs(pEnnemy->y - Joueur.y) < 1){
             removeEnnemy(ListeEnnemies, pEnnemy, &EnnemiesCount);
         }
     }
 }
 
 void gestPhysique(){
-    incAttack(&JoueurAttack, &AttackNum, &tick);
+    incAttack(&Joueur.isAttacking, &AttackNum, &tick);
     //printf("%p\n", Ennemy);
     for (int i = 0; i < EnnemiesCount ; i++){
         Player_t * Ennemy = ListeEnnemies[i];
