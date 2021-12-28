@@ -1,8 +1,6 @@
 #include "gameplay.h"
 
 int DrawJumpEffect = 0;
-int AttackNum = 0;
-int tick = 420;
 
 void initPlayer(Player_t * pJoueur, float x, float y){
     pJoueur->x = x;
@@ -14,20 +12,23 @@ void initPlayer(Player_t * pJoueur, float x, float y){
     pJoueur->yHitbox = 1.9;
     pJoueur->xSpeed = 0;
     pJoueur->ySpeed = 0;
+    pJoueur->isAttacking = 0;
+    pJoueur->AttackNum = 0;
+    pJoueur->tick = 420;
 }
 
-void incAttack(int * pJoueurAttack, int * pAttackNum, int * tick){
+void incAttack(Player_t * pEntity){
     //printf("%d %d %d\n", *pJoueurAttack, *pAttackNum, *tick);
-    if (*pJoueurAttack == 0){
-        *pAttackNum = 0;
-        *tick = 420;
+    if (pEntity->isAttacking == 0){
+        pEntity->AttackNum = 0;
+        pEntity->tick = 420;
     }
     else {
-        if (*tick == 420){
-            *tick  = SDL_GetTicks()/250;
+        if (pEntity->tick == 420){
+            pEntity->tick  = SDL_GetTicks()/250;
         }
-        if (*pAttackNum < 3){
-            *pAttackNum = SDL_GetTicks()/250 - *tick;
+        if (pEntity->AttackNum < 3){
+            pEntity->AttackNum = SDL_GetTicks()/250 - pEntity->tick;
         }
     }
 }
@@ -52,7 +53,6 @@ int checkCollisionY(Player_t *pEntity){
 }
 
 int checkCollisionX(Player_t *pEntity){
-
     int case_right = ceilf(pEntity->x - 2/16.0);
     int case_left = floorf(pEntity->x + 2/16.0);
     int case_bot = floorf(pEntity->y + pEntity->xHitbox - 1) + 1;
@@ -60,17 +60,11 @@ int checkCollisionX(Player_t *pEntity){
     int case_below = floorf(pEntity->y + pEntity->xHitbox + 2/16.0 - 1) + 1 +1;
     //printf("left = %d , pos = %f, %f , right = %d, bot= %d top= %d\n", case_left, pEntity->x,pEntity->y, case_right, case_bot, case_top);
     //printf("DESTINATION: %f\n", pEntity->x + xSpeed);
-    if (map[case_bot][case_right] || map[case_top][case_right] || (pEntity->isFalling && pEntity->y - (int)pEntity->y > 0.3 && map[case_below][case_right])){
-        if (pEntity->isFalling && map[case_below][case_right]){
-            //printf("in block right\n");
-        }
+    if (map[case_bot][case_right] || map[case_top][case_right]){// || (pEntity->isFalling && pEntity->y - (int)pEntity->y > 0.7 && map[case_below][case_right])){
         pEntity->xSpeed = 0;
         return 2;
     }
-    if (map[case_bot][case_left] || map[case_top][case_left] || (pEntity->isFalling && pEntity->y - (int)pEntity->y > 0.3 && map[case_below][case_left])){
-        if (pEntity->isFalling && map[case_below][case_left]){
-            //printf("in block left\n");
-        }
+    if (map[case_bot][case_left] || map[case_top][case_left]){// || (pEntity->isFalling && pEntity->y - (int)pEntity->y > 0.7 && map[case_below][case_left])){
         pEntity->xSpeed = 0;
         return 1;
     }
@@ -111,8 +105,9 @@ int PlayerMoveX(Player_t * pEntity){
 int EntityMoveX(Player_t *pEntity){
     int MoveLeft = 0;
     int MoveRight = 0;
+    (pEntity->x - Joueur.x > 0) ? (pEntity->direction = 0):(pEntity->direction = 1);
     if (fabs(pEntity->x - Joueur.x) < 4.5){
-        if (fabs(pEntity->x - Joueur.x) > 1 + 2 * (rand()%10)/10){
+        if (fabs(pEntity->x - Joueur.x) > 1.5){
             if (pEntity->x - Joueur.x < 0){
                 MoveRight = 1;
                 MoveLeft = 0;
@@ -188,7 +183,7 @@ int PlayerMoveY(Player_t * pEntity){
 }
 
 void checkAttack(Player_t * pEnnemy){
-    if (AttackNum == 2){
+    if (Joueur.AttackNum == 2){
         if (fabs(pEnnemy->x - Joueur.x) < 1 && fabs(pEnnemy->y - Joueur.y) < 1){
             removeEnnemy(ListeEnnemies, pEnnemy, &EnnemiesCount);
         }
@@ -196,10 +191,11 @@ void checkAttack(Player_t * pEnnemy){
 }
 
 void gestPhysique(){
-    incAttack(&Joueur.isAttacking, &AttackNum, &tick);
+    incAttack(&Joueur);
     //printf("%p\n", Ennemy);
     for (int i = 0; i < EnnemiesCount ; i++){
         Player_t * Ennemy = ListeEnnemies[i];
+        incAttack(Ennemy);
         checkAttack(Ennemy);
         EntityMoveX(Ennemy);
         EntityMoveY(Ennemy);

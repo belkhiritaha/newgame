@@ -15,12 +15,12 @@ void * gestInput(SDL_Renderer * renderer){
             {
                 case SDL_MOUSEBUTTONDOWN:
                     Joueur.isAttacking = 1;
-                    AttackNum = 0;
+                    Joueur.AttackNum = 0;
                     break;
 
                 case SDL_MOUSEBUTTONUP:
                     Joueur.isAttacking = 0;
-                    AttackNum = 0;
+                    Joueur.AttackNum = 0;
                     break;
 
                 case SDL_KEYDOWN:

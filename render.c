@@ -20,6 +20,7 @@ SDL_Surface *blocks[7];
 SDL_Surface *character_sprite[10];
 SDL_Surface *king_sprite[10];
 SDL_Surface *character_sprite_attack[4];
+SDL_Surface *king_sprite_attack[4];
 SDL_Texture * sprite_texture;
 
 
@@ -72,7 +73,14 @@ void DrawEnnemies(SDL_Renderer* renderer, SDL_Texture* ennemy_texture, float pos
             }
             
         }
-        SDL_RenderCopyEx(renderer, sprite_texture, &sprt_rect, &rect, 0, NULL, SDL_FLIP_HORIZONTAL *(1 - Joueur.direction));
+        if (Ennemy->isAttacking){
+            sprt_rect.h = 68;
+            sprt_rect.w = 44;
+            sprt_rect.x = 0;
+            sprt_rect.y = 0;
+            sprite_texture = SDL_CreateTextureFromSurface(renderer, king_sprite_attack[Ennemy->AttackNum]);
+        }
+        SDL_RenderCopyEx(renderer, sprite_texture, &sprt_rect, &rect, 0, NULL, SDL_FLIP_HORIZONTAL *(1 - Ennemy->direction));
         SDL_DestroyTexture(sprite_texture);
     }
 }
@@ -139,7 +147,7 @@ void DrawPlayer(SDL_Renderer* renderer ,SDL_Rect rect , SDL_Texture* sprite_text
     }
 
     if (Joueur.isAttacking){
-        if (AttackNum == 2){
+        if (Joueur.AttackNum == 2){
             rect.x+= 50 * (Joueur.direction - 1);
             rect.h *=2;
             rect.w *=2;
@@ -148,7 +156,7 @@ void DrawPlayer(SDL_Renderer* renderer ,SDL_Rect rect , SDL_Texture* sprite_text
         else {
             rect.w *=1.5;
         }
-        sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite_attack[AttackNum]);
+        sprite_texture = SDL_CreateTextureFromSurface(renderer, character_sprite_attack[Joueur.AttackNum]);
         SDL_RenderCopyEx(renderer, sprite_texture, NULL, &rect, 0, NULL, SDL_FLIP_HORIZONTAL*(1-Joueur.direction));
     }
     else {
@@ -315,12 +323,18 @@ int BouclePrincipale()
     king_sprite[1] = IMG_Load("Res/king_run_spritesheet.png");
     king_sprite[2] = IMG_Load("Res/king_jump_spritesheet.png");
     king_sprite[3] = IMG_Load("Res/king_fall_spritesheet.png");
+    king_sprite[4] = IMG_Load("Res/king_attack_spritesheet.png");
     background = IMG_Load("Res/Cartoon_Forest_BG_03.png");
 
     character_sprite_attack[0] = IMG_Load("Res/attack0.png");
     character_sprite_attack[1] = IMG_Load("Res/attack1.png");
     character_sprite_attack[2] = IMG_Load("Res/attack2.png");
     character_sprite_attack[3] = IMG_Load("Res/attack3.png");
+
+    king_sprite_attack[0] = IMG_Load("Res/king_attack0.png");
+    king_sprite_attack[1] = IMG_Load("Res/king_attack1.png");
+    king_sprite_attack[2] = IMG_Load("Res/king_attack2.png");
+    king_sprite_attack[3] = IMG_Load("Res/king_attack3.png");
     SDL_Texture *bg_texure = NULL;
     SDL_Texture *block_texture = NULL;
     SDL_Texture *sprite_texture = NULL;

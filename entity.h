@@ -26,6 +26,8 @@ typedef struct Player{
     int isGrounded;
     int isFalling;
     int isAttacking;
+    int AttackNum;
+    int tick;
 }Player_t;
 
 #include "gameplay.h"
