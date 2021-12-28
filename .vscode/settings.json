@@ -6,6 +6,7 @@
         "sdl.h": "c",
         "string_view": "c",
         "entity.h": "c",
-        "gameplay.h": "c"
+        "gameplay.h": "c",
+        "stdio.h": "c"
     }
 }

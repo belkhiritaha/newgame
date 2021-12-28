@@ -3,10 +3,11 @@
 int DrawJumpEffect = 0;
 int AttackNum = 0;
 int EnnemyAttack = 0;
+int tick = 420;
 
-void initPlayer(Player_t * pJoueur){
-    pJoueur->x = 87;
-    pJoueur->y = 7;
+void initPlayer(Player_t * pJoueur, float x, float y){
+    pJoueur->x = x;
+    pJoueur->y = y;
     pJoueur->isGrounded = 0;
     pJoueur->h = 2;
     pJoueur->w = 1;
@@ -16,14 +17,19 @@ void initPlayer(Player_t * pJoueur){
     pJoueur->ySpeed = 0;
 }
 
-void incAttack(int * pJoueurAttack, int * pAttackNum){
-    if (*pJoueurAttack){
-        //printf("%d %d\n", *pJoueurAttack, *pAttackNum);
-        int tick = SDL_GetTicks()/125;
-        *pAttackNum = tick % 4;
+void incAttack(int * pJoueurAttack, int * pAttackNum, int * tick){
+    printf("%d %d %d\n", *pJoueurAttack, *pAttackNum, *tick);
+    if (*pJoueurAttack == 0){
+        *pAttackNum = 0;
+        *tick = 420;
     }
     else {
-        *pAttackNum = 0;
+        if (*tick == 420){
+            *tick  = SDL_GetTicks()/250;
+        }
+        if (*pAttackNum < 3){
+            *pAttackNum = SDL_GetTicks()/250 - *tick;
+        }
     }
 }
 
@@ -57,14 +63,14 @@ int checkCollisionX(Player_t *pEntity){
     //printf("DESTINATION: %f\n", pEntity->x + xSpeed);
     if (map[case_bot][case_right] || map[case_top][case_right] || (pEntity->isFalling && pEntity->y - (int)pEntity->y > 0.3 && map[case_below][case_right])){
         if (pEntity->isFalling && map[case_below][case_right]){
-            printf("in block right\n");
+            //printf("in block right\n");
         }
         pEntity->xSpeed = 0;
         return 2;
     }
     if (map[case_bot][case_left] || map[case_top][case_left] || (pEntity->isFalling && pEntity->y - (int)pEntity->y > 0.3 && map[case_below][case_left])){
         if (pEntity->isFalling && map[case_below][case_left]){
-            printf("in block left\n");
+            //printf("in block left\n");
         }
         pEntity->xSpeed = 0;
         return 1;
@@ -106,7 +112,7 @@ int PlayerMoveX(Player_t * pEntity){
 int EntityMoveX(Player_t *pEntity){
     int MoveLeft = 0;
     int MoveRight = 0;
-    if (fabs(pEntity->x - Joueur.x) < 3){
+    if (fabs(pEntity->x - Joueur.x) < 4.5){
         if (fabs(pEntity->x - Joueur.x) > 1.5){
             if (pEntity->x - Joueur.x < 0){
                 MoveRight = 1;
@@ -129,20 +135,20 @@ int EntityMoveX(Player_t *pEntity){
     {
         case 0: //no sides collided
             if (fabs(pEntity->xSpeed) < MAX_RUN_SPEED){
-                pEntity->xSpeed += GROUND_MVT * (MoveRight - MoveLeft);
+                pEntity->xSpeed += ENNEMY_GROUND_MVT * (MoveRight - MoveLeft);
             }
-            (pEntity->xSpeed > 0) ? (pEntity->xSpeed -= GROUND_MVT/1.32) : (pEntity->xSpeed += GROUND_MVT/1.32);
+            (pEntity->xSpeed > 0) ? (pEntity->xSpeed -= ENNEMY_GROUND_MVT/1.32) : (pEntity->xSpeed += ENNEMY_GROUND_MVT/1.32);
 
             pEntity->x += pEntity->xSpeed;
             break;
         
         case 2: //right side collided
-            pEntity->xSpeed -= GROUND_MVT * MoveLeft;
+            pEntity->xSpeed -= ENNEMY_GROUND_MVT * MoveLeft;
             pEntity->x += pEntity->xSpeed;
             break;
 
         case 1: //left side collided
-           pEntity->xSpeed += GROUND_MVT * MoveRight;
+           pEntity->xSpeed += ENNEMY_GROUND_MVT * MoveRight;
             pEntity->x += pEntity->xSpeed;
             break;
 
@@ -182,20 +188,25 @@ int PlayerMoveY(Player_t * pEntity){
     return 1;
 }
 
-void checkAttack(){
-    if (AttackNum == 3){
-        if (fabs(Ennemy.x - Joueur.x) < 1){
-            Ennemy.y = 5;
+void checkAttack(Player_t * pEnnemy){
+    if (AttackNum == 2){
+        if (fabs(pEnnemy->x - Joueur.x) < 1 && fabs(pEnnemy->y - Joueur.y) < 3){
+            removeEnnemy(ListeEnnemies, pEnnemy, &EnnemiesCount);
         }
     }
 }
 
 void gestPhysique(){
-    checkAttack();
-    incAttack(&JoueurAttack, &AttackNum);
+    incAttack(&JoueurAttack, &AttackNum, &tick);
+    //printf("%p\n", Ennemy);
+    for (int i = 0; i < EnnemiesCount ; i++){
+        Player_t * Ennemy = ListeEnnemies[i];
+        checkAttack(Ennemy);
+        EntityMoveX(Ennemy);
+        EntityMoveY(Ennemy);
+    }
     PlayerMoveX(&Joueur);
-    EntityMoveX(&Ennemy);
     PlayerMoveY(&Joueur);
-    EntityMoveY(&Ennemy);
+
 }
 

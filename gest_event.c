@@ -16,10 +16,12 @@ void * gestInput(SDL_Renderer * renderer){
             {
                 case SDL_MOUSEBUTTONDOWN:
                     JoueurAttack = 1;
+                    AttackNum = 0;
                     break;
 
                 case SDL_MOUSEBUTTONUP:
                     JoueurAttack = 0;
+                    AttackNum = 0;
                     break;
 
                 case SDL_KEYDOWN:
@@ -44,8 +46,8 @@ void * gestInput(SDL_Renderer * renderer){
                         continue;
 
                     case SDLK_x:
-                        EtapeActuelleDuJeu = 0;
-                        running = 0;
+                        EnnemiesCount = 0;
+                        initListeEnnemies(ListeEnnemies, &EnnemiesCount);
                         break;
                     
                     default:

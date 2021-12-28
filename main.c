@@ -22,8 +22,8 @@ int main()
   running = 1;
   initMap();
   //printMap();
-  initPlayer(&Joueur);
-  initPlayer(&Ennemy);
+  initListeEnnemies(ListeEnnemies, &EnnemiesCount);
+  initPlayer(&Joueur, 87, 8);
   initKeys(Keys);
 
   srand(time(NULL));

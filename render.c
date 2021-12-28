@@ -29,16 +29,16 @@ void SDL_ExitWithError(const char *message){
     exit(EXIT_FAILURE);
 }
 
-void DrawEnnemies(SDL_Renderer* renderer, SDL_Texture* ennemy_texture, float posX, float posY){
+void DrawEnnemies(SDL_Renderer* renderer, SDL_Texture* ennemy_texture, float posX, float posY, Player_t * Ennemy){
     int tick = SDL_GetTicks()/500;
     SDL_Rect rect;
     rect.w = (TailleEcranLong/NB_BLOCKS_X) * Joueur.w;
     rect.h =(TailleEcranHaut/NB_BLOCKS_Y) * Joueur.h;
-    rect.x = TailleEcranLong/2 - rect.w + (Ennemy.x - posX) * 100;
-    rect.y = TailleEcranHaut/2 - (TailleEcranHaut/NB_BLOCKS_Y) + (Ennemy.y - posY) * 80;
+    rect.x = TailleEcranLong/2 - rect.w + (Ennemy->x - posX) * 100;
+    rect.y = TailleEcranHaut/2 - (TailleEcranHaut/NB_BLOCKS_Y) + (Ennemy->y - posY) * 80;
     SDL_Rect sprt_rect;
-    //printf("%f %f \n", Ennemy.x, posX);
-    if (Ennemy.x + Ennemy.w > posX - 5 && Ennemy.x - Ennemy.w < posX + 5  && Ennemy.y + Ennemy.h > posY - 5 && Ennemy.y - Ennemy.h < posY + 5){
+    //printf("%f %f \n", Ennemy->x, posX);
+    if (Ennemy->x + Ennemy->w > posX - 5 && Ennemy->x - Ennemy->w < posX + 5  && Ennemy->y + Ennemy->h > posY - 5 && Ennemy->y - Ennemy->h < posY + 5){
             sprt_rect.h = 53;
             sprt_rect.w = 45;
             sprt_rect.x = 45 * (tick % 8);
@@ -50,7 +50,10 @@ void DrawEnnemies(SDL_Renderer* renderer, SDL_Texture* ennemy_texture, float pos
 }
 
 void DrawPlayer(SDL_Renderer* renderer ,SDL_Rect rect , SDL_Texture* sprite_texture){
-    DrawEnnemies(renderer, sprite_texture, Joueur.x, Joueur.y);
+    for (int i = 0; i < EnnemiesCount; i++){
+        Player_t * Ennemy = ListeEnnemies[i];
+        DrawEnnemies(renderer, sprite_texture, Joueur.x, Joueur.y, Ennemy);
+    }
     int tick = SDL_GetTicks()/500;
     SDL_Rect sprt_rect;
     sprt_rect.h = 50;
@@ -314,7 +317,7 @@ int BouclePrincipale()
                 break;
             case 1:
                 afficher(renderer, rect, block_texture, sprite_texture, bg_texure);
-                SDL_Delay(10);
+                //SDL_Delay(10);
                 SDL_RenderClear(renderer);
                 break;
                 //case 420:WinOrange();break;
