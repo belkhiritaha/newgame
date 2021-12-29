@@ -15,6 +15,8 @@ void initPlayer(Player_t * pJoueur, float x, float y){
     pJoueur->isAttacking = 0;
     pJoueur->AttackNum = 0;
     pJoueur->tick = 420;
+    pJoueur->Health = 500;
+    pJoueur->isTakingDmg = 0;
 }
 
 void incAttack(Player_t * pEntity){
@@ -119,7 +121,9 @@ int EntityMoveX(Player_t *pEntity){
             pEntity->isAttacking = 0;
         }
         else {
-            pEntity->isAttacking = 1;
+            if (!pEntity->isTakingDmg){
+                pEntity->isAttacking = 1;
+            }
             MoveRight = 0;
             MoveLeft = 0;
         }
@@ -185,7 +189,18 @@ int PlayerMoveY(Player_t * pEntity){
 void checkAttack(Player_t * pEnnemy){
     if (Joueur.AttackNum == 2){
         if (fabs(pEnnemy->x - Joueur.x) < 1 && fabs(pEnnemy->y - Joueur.y) < 1){
-            removeEnnemy(ListeEnnemies, pEnnemy, &EnnemiesCount);
+            if (pEnnemy->Health > 0){
+                pEnnemy->Health -= 1;
+                pEnnemy->isTakingDmg = 1;
+                pEnnemy->isAttacking = 0;
+            }
+            else {
+                printf("dead\n");
+                removeEnnemy(ListeEnnemies, pEnnemy, &EnnemiesCount);
+            }
+        }
+        else {
+            pEnnemy->isTakingDmg = 0;
         }
     }
 }

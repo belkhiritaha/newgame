@@ -30,6 +30,16 @@ void SDL_ExitWithError(const char *message){
     exit(EXIT_FAILURE);
 }
 
+void DrawHealthBar(SDL_Renderer* renderer, Player_t * pEntity ,float x, float y){
+    SDL_Rect rect;
+    rect.x = x;
+    rect.y = y;
+    rect.w = 50 * pEntity->Health/200;
+    rect.h = 5;
+    SDL_SetRenderDrawColor(renderer, 0,255,0,255);
+    SDL_RenderFillRect(renderer,&rect);
+}
+
 void DrawEnnemies(SDL_Renderer* renderer, SDL_Texture* ennemy_texture, float posX, float posY, Player_t * Ennemy){
     int tick = SDL_GetTicks()/500;
     SDL_Rect rect;
@@ -37,6 +47,7 @@ void DrawEnnemies(SDL_Renderer* renderer, SDL_Texture* ennemy_texture, float pos
     rect.h =(TailleEcranHaut/NB_BLOCKS_Y) * Joueur.h;
     rect.x = TailleEcranLong/2 - rect.w + (Ennemy->x - posX) * 100;
     rect.y = TailleEcranHaut/2 - (TailleEcranHaut/NB_BLOCKS_Y) + (Ennemy->y - posY) * 80;
+    DrawHealthBar(renderer, Ennemy, rect.x, rect.y);
     SDL_Rect sprt_rect;
     //printf("%f %f \n", Ennemy->x, posX);
     if (Ennemy->x + Ennemy->w > posX - 5 && Ennemy->x - Ennemy->w < posX + 5  && Ennemy->y + Ennemy->h > posY - 5 && Ennemy->y - Ennemy->h < posY + 5){
@@ -79,6 +90,13 @@ void DrawEnnemies(SDL_Renderer* renderer, SDL_Texture* ennemy_texture, float pos
             sprt_rect.x = 0;
             sprt_rect.y = 0;
             sprite_texture = SDL_CreateTextureFromSurface(renderer, king_sprite_attack[Ennemy->AttackNum]);
+        }
+        else if (Ennemy->isTakingDmg){
+            sprt_rect.h = 55;
+            sprt_rect.w = 48;
+            sprt_rect.x = 48 * (tick/2 % 4);
+            sprt_rect.y = 0;
+            sprite_texture = SDL_CreateTextureFromSurface(renderer, king_sprite[5]);
         }
         SDL_RenderCopyEx(renderer, sprite_texture, &sprt_rect, &rect, 0, NULL, SDL_FLIP_HORIZONTAL *(1 - Ennemy->direction));
         SDL_DestroyTexture(sprite_texture);
@@ -324,6 +342,7 @@ int BouclePrincipale()
     king_sprite[2] = IMG_Load("Res/king_jump_spritesheet.png");
     king_sprite[3] = IMG_Load("Res/king_fall_spritesheet.png");
     king_sprite[4] = IMG_Load("Res/king_attack_spritesheet.png");
+    king_sprite[5] = IMG_Load("Res/king_takingdmg_spritesheet.png");
     background = IMG_Load("Res/Cartoon_Forest_BG_03.png");
 
     character_sprite_attack[0] = IMG_Load("Res/attack0.png");
