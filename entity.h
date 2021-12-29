@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define NB_ENNEMY 5
+#define NB_ENNEMY 10
 
 typedef struct Player{
     float x;

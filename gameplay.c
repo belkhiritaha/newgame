@@ -19,22 +19,6 @@ void initPlayer(Player_t * pJoueur, float x, float y){
     pJoueur->isTakingDmg = 0;
 }
 
-void incAttack(Player_t * pEntity){
-    //printf("%d %d %d\n", *pJoueurAttack, *pAttackNum, *tick);
-    if (pEntity->isAttacking == 0){
-        pEntity->AttackNum = 0;
-        pEntity->tick = 420;
-    }
-    else {
-        if (pEntity->tick == 420){
-            pEntity->tick  = SDL_GetTicks()/250;
-        }
-        if (pEntity->AttackNum < 3){
-            pEntity->AttackNum = SDL_GetTicks()/250 - pEntity->tick;
-        }
-    }
-}
-
 int checkCollisionY(Player_t *pEntity){
     int case_x = floorf(pEntity->x + pEntity->xSpeed + pEntity->xHitbox - 0.5);//dont touch this
     int case_y = floorf(pEntity->y + pEntity->ySpeed + pEntity->yHitbox);
@@ -187,23 +171,38 @@ int PlayerMoveY(Player_t * pEntity){
 }
 
 void checkAttack(Player_t * pEnnemy){
-    if (Joueur.AttackNum == 2){
-        if (fabs(pEnnemy->x - Joueur.x) < 1 && fabs(pEnnemy->y - Joueur.y) < 1){
-            if (pEnnemy->Health > 0){
-                pEnnemy->Health -= 1;
-                pEnnemy->isTakingDmg = 1;
-                pEnnemy->isAttacking = 0;
-            }
-            else {
-                printf("dead\n");
-                removeEnnemy(ListeEnnemies, pEnnemy, &EnnemiesCount);
-            }
+    if (fabs(pEnnemy->x - Joueur.x) < 1.3 && fabs(pEnnemy->y - Joueur.y) < 1.5 && Joueur.AttackNum > 1){
+        if (pEnnemy->Health > 0){
+            pEnnemy->Health -= 1;
+            pEnnemy->isTakingDmg = 1;
+            pEnnemy->isAttacking = 0;
         }
         else {
-            pEnnemy->isTakingDmg = 0;
+            printf("dead\n");
+            removeEnnemy(ListeEnnemies, pEnnemy, &EnnemiesCount);
+        }
+    }
+    else {
+        pEnnemy->isTakingDmg = 0;
+    }
+}
+
+void incAttack(Player_t * pEntity){
+    //printf("%d %d %d\n", *pJoueurAttack, *pAttackNum, *tick);
+    if (pEntity->isAttacking == 0){
+        pEntity->AttackNum = 0;
+        pEntity->tick = 420;
+    }
+    else {
+        if (pEntity->tick == 420){
+            pEntity->tick  = SDL_GetTicks()/250;
+        }
+        if (pEntity->AttackNum < 3){
+            pEntity->AttackNum = SDL_GetTicks()/250 - pEntity->tick;
         }
     }
 }
+
 
 void gestPhysique(){
     incAttack(&Joueur);

@@ -94,7 +94,7 @@ void DrawEnnemies(SDL_Renderer* renderer, SDL_Texture* ennemy_texture, float pos
         else if (Ennemy->isTakingDmg){
             sprt_rect.h = 55;
             sprt_rect.w = 48;
-            sprt_rect.x = 48 * (tick/2 % 4);
+            sprt_rect.x = 48 * (SDL_GetTicks()/250 - Joueur.tick);
             sprt_rect.y = 0;
             sprite_texture = SDL_CreateTextureFromSurface(renderer, king_sprite[5]);
         }
